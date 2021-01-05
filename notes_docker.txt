@@ -1,0 +1,191 @@
+====================================================================================================================================================================
+
+DOCKER
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Why we need Docker?
+
+So when we are building something using multiple components such as web server(ex nodejs), database (ex mongodb), etc... We face problems of compatibility. We require all of them to be able to work with the OS and the right versions of each of them to work with each other. This would create a mess of ensuring each application is on the correct version...
+
+With docker, you can run each component in a separate container, with its own libraries and its own dependencies.
+
+The main purpose of docker is to package a container with applications, to ship them and run them anywhere anytime.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+What are containers?
+
+Containers are completely isolated environments, they have their own processors, their own network interfaces, and their own mounts.. But they all share the same OS kernel. 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Containers vs virtual machines(VMs)
+
+
+Each virtual machine has its own OS, and then the dependencies and libraries and then the application. 
+Whereas each docker container only has the dependencies, libraries, and the application. (And they all share a common OS) 
+
+(The purpose of VM(virtual machine) was that each application should feel like it has "its own everything" - its own resources of hardware, OS, etc)
+
+
+VMs are huge:  GBs in size
+Docker containers are much smaller: MBs in size
+
+Hence docker containers boot up faster. Since the VMs need to boot the whole OS.
+
+VMs provide more isolation compared to Docker.
+
+With VMs you can run both Linux based and Windows based applications on the same hypervisor,  Since both the applications come with their own OS(Linux and Windows)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+A lot of containerized versions of applications are directly available on DockerHub, which can be directly downloaded and used.
+
+The docker image is downloaded, and it can run of any host with Docker installed on it.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Container vs image
+
+
+"Docker Image" is a package or a template. It is used to create containers.
+"Containers" are running instances of the "Docker Images", that are isolated and have their own environments and set of processes.
+
+So 
+Image is the TEMPLATE, and container is each INSTANCE of the image.
+(IMP to get your terminology right)
+So we pull an "image", and everytime we docker run it, we run a "Container" of that image.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Docker commands
+
+docker run <application_name>
+Is used to run a container from an image
+If the image is already present on your host, then it will run it. Otherwise it will go to dockerhub and pull the image(only for the first time). Every next usage will happen from the installed one itself.
+
+docker pull <name>
+Only pulls the image, and doesnt run it
+
+docker ps
+Lists all running containers and some info abt them.
+
+docker ps -a
+Prints all running and previously executed commands. 
+
+docker images
+Lists all the docker images installed on your computer (the ones that you have pulled or run)
+
+docker exec
+used to execute a command on my docker container
+
+cat /etc/*release*		(Note this is not a docker command. Its a bash terminal command)
+Gives the name of the OS that you are working on. Ex in my laptop is gives 'Focal Fossa'. If we docker pull an image of an OS, ex- CentOS, and we enter the OS through the docker container, and then we run this command. Then the printed OS would be 'CentOS', since for it it sees that its running on that OS.
+
+
+docker run -d centos sleep 2000
+this command will run a container of the centos image. "-d" is to specify to run it in the background(ie, the terminal is still available to us). "sleep" is used to specify that you stop running it after 2000 seconds automatically.
+We can also force kill the docker container using (docker stop <container_name>)
+
+docker rm <container_name>  			(ex: docker rm flamboyant_ardhill)        (this docker container name has been given by docker itself)
+is used to remove the container
+
+docker rmi <image_name> 			(ex: docker rm centos)                   (this image name is the one that you have downloaded)
+is used to remove the image 
+
+docker -h
+help command to get all the commands of docker
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Note:
+If you try running docker commands directly, ex - (docker run mongodb), then it will say access denied. This is because docker needs to make certain system calls, and these permissions are not given to every user. Only the "root" can allow these, so you either run each command with "sudo" in front of it, ex - (sudo docker run mongodb). Or you enter as root, by first typing 	(sudo -s) on the terminal.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Whenever you run the docker run <name> command, it creates a container of that image. Each of these containers is given a container id and name, and these containers can be tracked and operated on by using these ids and names.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+docker run -d centos sleep 2000
+
+this command will run a container of the centos image. "-d" (detach: means run commands in the background) is to specify to run it in the background(ie, the terminal is still available to us). "sleep" is used to specify that you stop running it after 2000 seconds automatically.
+We can also force kill the docker container using (docker stop <container_name>)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Difference between docker run and docker exec
+
+The difference between “docker run” and “docker exec” is that “docker exec” executes a command on a running container. On the other hand, “docker run” creates a temporary container, executes the command in it and stops the container when it is done.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+====================================================================================================================================================================
+
+DOCKER RUN
+
+docker run redis	 (will install redis with default latest version)
+docker run redis:4.0	 (by specifying "tag", it will pull redis with the specified verison, here the 4.0 version of redis) 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+To enter, into a docker container, use the exec command (it helps to execute bash commands inside the docker container)
+
+docker run -it <name> 		: -i for interactive mode, and -t for pseudo terminal
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Host and Port
+
+Port: In simple language, "Port" is a number used by a particular software to identify its data coming from internet.
+In every home, there is one mailbox and multiple people. The mailbox is a host. Your own home mailbox is a localhost. Each person in a home has a room. All letters for that person are sent to his room, hence the room number is a port.
+
+Multiple containers can run on your host machine. Your laptop has only certain ports available, and you cannot connect multiple containers on the same port. But you can connect multiple ports for the same container (binding b/w port and container). The host would then know how to forward the request using port binding.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+TCP IP Protocol
+
+When the client wants to access certain resources from the server, it needs to uniquely identify the server on the internet. This is done by the IP address. This identifies the server uniquely, but there may be multiple resources/applications running on that server. How do we know which one we need to access?
+Here comes the TCP part. To uniquely identify the application/resource on the server, we specify its "PORT" id. Hence, when we send a packet/request from the client to the server, we attach two headers to it, one is the IP header(for the IP adress of the server), and the other is the TCP header(for the port number).
+Port numbers for applications are usually standard, ex- SQL uses port number 33 always, so the client knows which port number to access for accessing SQL on the server.
+
+
+In context of Docker
+When we run programs locally on the local machine (called the host here), then the 'server' part as seen above exists in the local machine itself, ie we are accessing the resources from our own machine. 
+So until docker was used, each port could be used for only a single application/resource (since each port had to uniquely identify the resource). But now with docker, each docker container feels like a new machine of itself, so multiple containers can be using the same port. Because for it, it would internally feel like it has its own resource. Now to identify the application is of which docker container, we use "PORT BINDING" (port mapping). (Bind them to two different ports on the host machine). So for example, two docker containers use mySQL application of port 33. So the first one will access it via 10-->33, and the second docker container's sql is accessed via 20->33.
+So the port number of the docker container here is 33, but of the host is different for both 10 and 20(and they are mapped to the 33s inside either of these docker containers)
+Hence we bind the host and the container ports.
+
+
+Syntax to write a docker command for this is:
+	docker run -p6000:6379 	(where 6000 specifies the host(local machine) port, and 6379 specifies the container port)
+
+
+Termed as : "on which PORT the CONTAINER is LISTENING to the incoming requests"
+
+Note:
+The concept of NAMESPACE is used. Example two ports of 33 can exist inside two different docker containers, since their namespace is different. Its like a local variable in two different functions. The local variable x(port) in func1(conatiner 1) and func2(container 2) is different for both, in its own namespace.
+
+
+Host is basically local machine.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Basic docker commands
+
+
+docker pull
+docker start
+docker run		(combines pull and start)
+docker stop		(start and stop also allows to restart a container after you made certain changes)
+docker run -d		(to run it in detach mode)
+docker run -p 		(allows you to bind port of your host to your container)	( -p[hostport]:[containerport]  , ex-  -p6000:6379 )
+docker ps		(lists all current running containers)
+docker ps -a		(all current running and previously run containers)
+docker logs		(given as docker logs <container_name> to get the logs of that container. This is helpful in debugging)
+docker run --name	(this will create a new container with the name that we specify, so that subsequently we can access the container with this name)
+docker exec		(we can get the terminal of a running container. Its another useful command in debugging.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+docker exec
+
+
+
+
+
