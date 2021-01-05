@@ -180,12 +180,141 @@ docker ps -a		(all current running and previously run containers)
 docker logs		(given as docker logs <container_name> to get the logs of that container. This is helpful in debugging)
 docker run --name	(this will create a new container with the name that we specify, so that subsequently we can access the container with this name)
 docker exec		(we can get the terminal of a running container. Its another useful command in debugging.
-
+docker network
+docker run --net
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 docker exec
+Command: 	docker exec -it <container_id> /bin/bash	,(-it is for interactive terminal)
+On executing this command, you will be inside the container as a root user. To exit the terminal, just do 'exit'.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+docker network
+
+docker network create <give_name_to_network>	, 	ex: 	docker network create mongo-network
+
+Then when we run a container and we want it to be part of the mongo-network that we created, when we do docker run, we shall specify the network as:
+	docker run --net mongonetwork
+
+(PENDING TO DO: ABOUT DOCKER NETWORKS)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+JENKINS
+
+(PENDING TO DO: ABOUT JENKINS)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+DOCKERFILE
+
+
+Dockerfile is a blueprint for creating docker images.
+ex of a docker file:
+
+FROM node			(this means that this image that we are creating, we base our own image on the node(nodejs) image. Basically 'install node'.
+ENV MONGO_DB_USERNAME=admin MONGO_DB_PSWD=pswd		(optionally define environment variables) (used to set the environmental variables inside ) 
+RUN mkdir -p/home/app				(RUN is to execute any linux command)(here, it will create a directory inside the container)
+						(Note: This directory is created INSIDE of the container)
+COPY . /home/app				(here it means to copy current folder files to /home/app) (COPY command executes on the host machine)
+					(Note: RUN executes inside the docker container, wheres COPY executes inside the host machine)
+CMD ["node", "server.js"]		(this is always part of dockerfile)(this line here means to start the app with "node server.js) 					(CMD is an entry point command. You can have multiple RUN commands, but CMD is just one)
+
+
+Every dockerfile starts with FROM <another_image>, so basically every image is based off another image. Like layer stacking with images (IMAGE LAYERS)
+The dockerfile file has to be name exactly 'Dockerfile' as the filename 
 
 
 
+Now to build your image from the dockerfile that you just wrote, execute this command:
+docker build -t my-app:1.0 Dockerfile		(we have named our image my-app here with version 1.0, and specify the Dockerfile using which it should create img)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Another Dockerfile example
+
+This is how I would normally do it:
+Using Ubuntu OS, then using apt command install all the dependencies, using pip command install all dependencies of python, then copy source code to opt/source-code, then run the web server using "flask" command
 
 
+Now that you have the instructions(just above), we create a Dockerfile to create our own image:
+
+
+
+FROM Ubuntu							(start from a base OS or another image)
+
+RUN apt-get update
+RUN apt-get install python
+								(install all dependencies)									
+RUN pip install flask		
+RUN pip install flask-mysql					
+
+COPY . /opt/source-code					(copy source code)
+
+ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run		(specify entry point)
+
+
+
+Once this is done, run this command to build(create) the image from the above dockerfile
+	docker build Dockerfile -t my-custom-app
+To make it publically available on DockerHub, just do docker push
+	docker push my-custom-app
+	
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+DOCKER VOLUMES
+
+Docker volumes are used for data persistence in docker. For example if you have databases and other stateful applications, you'll have to use docker volumes for that.
+If you restart a container, the data would be all gone. Hence we need docker volumes.
+To do this, we MOUNT ('plug') a directory in the "host file system" (the local machine) to a directory in the "virtual file system" (in the container). So when we write data in the container, it gets automatically replicated to the (host) local machine.
+
+There are 3 volume types:
+1. Host volumes 
+	(in this type, You decide where on the host file system the reference is made,ie on which folder in host file system you will mount the container)
+	command:	docker run -v /home/mount/data:/var/lib/mysql/data
+2. Anonymous volumes	
+	(for each container a folder is generated that gets mounted. Automatically created by docker)
+	(it is automatically generated by docker somewhere in the /var/lib folder)
+	command:	docker run -v /var/lib/mysql/data		(note: the path you specify here is the path in the container)
+3. Named volumes
+	(similiar to anonymous volume, the only difference is that you can reference the volumes by name)	
+	command: 	docker run -v name:/var/lib/mysql/data
+	
+	
+	
+This can be specified in the .yaml file 
+YAML (a recursive acronym for "YAML Ain't Markup Language") is a human-readable data-serialization language. It is commonly used for configuration files and in applications where data is being stored or transmitted.]
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+To create volume
+
+- type: volume
+    source: db-data
+    target: /var/lib/mysql/data
+
+volumes:
+  db-data:
+  
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+Docker compose 
+Is just a structured way to contain very normal docker commands.
+Docker compose takes care of creating a common network.
+Indentation in .yaml file is very important
+
+
+docker-compose -f compose_file_name.yaml up 
+docker-compose -f compose_file_name.yaml down		(to bring it down, stop running it) 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
