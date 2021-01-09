@@ -3,7 +3,7 @@ services:
   mysql_container:
     image: mysql
     ports:
-      - 8080:8080
+      - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=my-secret-pw
     volumes:
@@ -12,9 +12,9 @@ services:
         target: /var/lib/mysql
 
   nodejs_container:
-    image: my_custom_node_image
+    image: new_app
     ports:
-      - 3000:3000
+      - 8080:8080
 volumes:
   sql-data:
     driver: local

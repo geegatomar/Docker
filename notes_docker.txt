@@ -308,10 +308,20 @@ Indentation in .yaml file is very important
 
 docker-compose -f compose_file_name.yaml up 
 docker-compose -f compose_file_name.yaml down		(to bring it down, stop running it) 
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
+Standard port to listen on for:
+SQL server:  3306
+Web Browser: 8080
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+netstat -antp | grep 8080
+
+this command in bash will tell me what processes are listening on the port 8080	
 	
-	
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	
 	

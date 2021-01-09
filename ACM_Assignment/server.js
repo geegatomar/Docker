@@ -1,16 +1,7 @@
-app.listen(3000, function () {
-  console.log("app listening on port 3000!");
-});
+var http = require('http');
 
-function connectWithRetry() {
-  return sql.connect(config, (err) => {
-    if (err) {
-      debug(`Connection to DB failed, retry in 5s (${chalk.gray(err.message)})`);
-      sql.close();
-      setTimeout(connectWithRetry, 5000);
-    } else {
-      debug('Connection to DB is now ready...');
-    }
- });
-}
-connectWithRetry();
+http.createServer(function (req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.write('Hello World!');
+    res.end();
+}).listen(8080);
