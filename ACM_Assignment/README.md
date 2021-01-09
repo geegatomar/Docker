@@ -11,6 +11,6 @@
 
 
 ### To do further
-<ul>
+
 * Learn Javascript and the required APIs to handle SQL queries.
-</ul>
+
