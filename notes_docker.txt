@@ -23,7 +23,7 @@ Containers vs virtual machines(VMs)
 Each virtual machine has its own OS, and then the dependencies and libraries and then the application. 
 Whereas each docker container only has the dependencies, libraries, and the application. (And they all share a common OS) 
 
-(The purpose of VM(virtual machine) was that each application should feel like it has "its own everything" - its own resources of hardware, OS, etc)
+(The purpose of VM (virtual machine) was that each application should feel like it has "its own everything" - its own resources of hardware, OS, etc)
 
 
 VMs are huge:  GBs in size
@@ -56,7 +56,7 @@ So we pull an "image", and everytime we docker run it, we run a "Container" of t
 Docker commands
 
 docker run <application_name>
-Is used to run a container from an image
+Is used to run a container from an image.
 If the image is already present on your host, then it will run it. Otherwise it will go to dockerhub and pull the image(only for the first time). Every next usage will happen from the installed one itself.
 
 docker pull <name>
